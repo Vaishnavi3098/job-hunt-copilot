@@ -1,0 +1,4 @@
+AI Engineer, Example Tech Pte Ltd (SAMPLE POSTING)
+We are looking for an AI Engineer to build RAG and LLM agent applications.
+Requirements: Python, LangChain or LlamaIndex, vector databases, FastAPI, Docker, AWS.
+Nice to have: Kubernetes, MCP, LLM evaluation. Applicants must have the right to work in Singapore.

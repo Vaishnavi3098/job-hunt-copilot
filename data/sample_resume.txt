@@ -1,0 +1,9 @@
+SAMPLE RESUME (fake data for demos; replace with your own, and keep your real one out of git)
+
+Generative AI Engineer (self-taught, 1+ year hands-on)
+Skills: Python, SQL, LangChain, ChromaDB, FastAPI, Docker, Git, Hugging Face, prompt engineering.
+
+Projects
+- Document Q&A chatbot: built a RAG pipeline with LangChain and ChromaDB, served through FastAPI.
+- Fine-tuning experiment: fine-tuned a small open model with LoRA using Hugging Face.
+- Resume matcher: Python script that compares resumes with job descriptions using embeddings.
