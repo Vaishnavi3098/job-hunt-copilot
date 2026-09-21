@@ -4,8 +4,8 @@ An MCP (Model Context Protocol) server that turns any MCP-capable AI app into a 
 You paste your resume and job postings; the server stores them, matches skills, tracks applications, and
 shows which skills the market asks for most.
 
-Works with any MCP client: Claude Desktop, Cursor, VS Code, MCP Inspector, or the included multi-provider
-client (Claude, OpenAI, Gemini).
+Designed to work with any MCP client. Tested with MCP Inspector and the included client using OpenAI.
+The Anthropic and Gemini adapters and the Claude Desktop config are included but not yet tested.
 
 ## Architecture
 
@@ -28,6 +28,8 @@ You -> AI model (Claude / OpenAI / Gemini)
 | Type | Name | Purpose |
 |------|------|---------|
 | Tool | `save_resume` | Store the resume and detect skills |
+| Tool | `save_resume_from_file` | Load the resume from a PDF, Word, or text file in the `data/` folder |
+| Tool | `delete_job` | Delete a saved job (needs `confirm=true` as a safety check) |
 | Tool | `add_job_from_text` | Save a pasted job posting; returns required skills and work-pass hints |
 | Tool | `list_jobs` | List saved jobs with status |
 | Tool | `match_resume_to_job` | Score, matched skills, missing skills |
@@ -86,6 +88,21 @@ Restart the app. If your version ignores `cwd`, set `"env": {"PYTHONPATH": "/abs
 - **Rough matching.** The score uses a keyword skill list (`jobhunt/skills.py`). It is transparent and testable,
   but it misses skills outside the list. Semantic matching with embeddings is a planned upgrade.
 - **Privacy.** Data stays in a local SQLite file, git-ignored. Use sample data in public demos.
+- **MCP SDK version.** The code targets the MCP Python SDK v1, so `requirements.txt` pins `mcp<2`.
+  Version 2 renamed `FastMCP`, so a migration is needed before upgrading.
+
+## Known limitations
+
+- **Keyword matching only.** The score counts skills from a fixed list, so a posting that uses concepts
+  instead of technology names can show a misleadingly high score (a 100% result on a role with few
+  recognized skills). Semantic matching is planned.
+- **AI output needs review.** Even with rules in `get_tailoring_context`, models sometimes stretch claims in
+  suggested resume bullets and then report that they were unsure of nothing. Always check suggestions against
+  your real resume.
+- **No duplicate detection.** Saving the same posting twice creates two jobs; use `delete_job` to clean up.
+- **Applied date is today's date.** `track_application` cannot record an earlier date yet.
+- **Privacy.** When an AI client calls tools, your resume text is sent to that AI provider.
+
 
 ## Roadmap
 
@@ -94,9 +111,3 @@ Restart the app. If your version ignores `cwd`, set `"env": {"PYTHONPATH": "/abs
 - [ ] `JobSource` adapters for open job feeds
 - [ ] Streamable HTTP transport + auth, deployed remotely
 - [ ] Evaluation: compare the match score with a human rating on 20 real postings
-
-## Resume bullet
-
-Built an MCP server (Python, SQLite) exposing 8 tools, 3 resources and 3 prompts for resume-to-job matching,
-application tracking and market-skill analysis; wrote a multi-provider MCP client (Claude, OpenAI, Gemini)
-and unit tests for the core logic.
